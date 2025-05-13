@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Promedio por Materia</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<h1>Promedio por Materia de <span th:text="${estudiante.nombre + ' ' + estudiante.apellido}"></span></h1>
+
+<form th:action="@{'/notas/' + ${estudiante.id} + '/promedio'}" method="post">
+    <input type="hidden" name="estudianteId" th:value="${estudiante.id}"/>
+
+    <div>
+        <label>Materia:</label>
+        <select name="materiaId" required>
+            <option value="">Seleccione una materia</option>
+            <option th:each="materia : ${materias}"
+                    th:value="${materia.id}"
+                    th:text="${materia.nombre}"
+                    th:selected="${materiaSeleccionada != null and materiaSeleccionada.id == materia.id}">
+            </option>
+        </select>
+    </div>
+
+    <button type="submit">Calcular</button>
+</form>
+
+<div th:if="${promedio != null}">
+    <p>Promedio en <span th:text="${materiaSeleccionada.nombre}"></span>:
+        <span th:text="${#numbers.formatDecimal(promedio, 1, 2)}"></span></p>
+</div>
+
+<a th:href="@{/notas/{id}(id=${estudiante.id})}">Volver</a>
+</body>
+</html>

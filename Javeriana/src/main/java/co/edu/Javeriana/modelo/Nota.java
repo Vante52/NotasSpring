@@ -29,9 +29,9 @@ public class Nota {
     @Column(length = 500)
     private String observacion;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column
     private Double valor;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column
     private Double porcentaje;
 }

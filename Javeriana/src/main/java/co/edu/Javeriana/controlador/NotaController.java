@@ -1,10 +1,12 @@
 package co.edu.Javeriana.controlador;
 
+import co.edu.Javeriana.modelo.Estudiante;
+import co.edu.Javeriana.modelo.Materia;
+import co.edu.Javeriana.repositorio.RepositorioMateria;
 import co.edu.Javeriana.repositorio.RepositorioNota;
 import co.edu.Javeriana.servicio.ServicioNota;
 import co.edu.Javeriana.modelo.Nota;
 import co.edu.Javeriana.repositorio.RepositorioEstudiante;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,15 +23,18 @@ public class NotaController {
     private RepositorioEstudiante estudianteRepo;
 
     @Autowired
+    private RepositorioMateria materiaRepo;
+
+    @Autowired
     private ServicioNota servicioNota;
 
     @GetMapping("/{estudianteId}")
     public String listar(@PathVariable Long estudianteId, Model model) {
+        Estudiante estudiante = estudianteRepo.findById(estudianteId)
+                .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + estudianteId));
+
         model.addAttribute("notas", notaRepo.findByEstudianteId(estudianteId));
-        model.addAttribute("estudianteId", estudianteId);
-        val est = estudianteRepo.findById(estudianteId).orElseThrow(null);
-        model.addAttribute("estudianteNombre", est.getNombre());
-        model.addAttribute("estudianteApellido", est.getApellido());
+        model.addAttribute("estudiante", estudiante);
         return "notas";
     }
 
@@ -42,7 +47,16 @@ public class NotaController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Nota nota) {
+    public String guardar(@ModelAttribute Nota nota, @RequestParam String nombreMateria) {
+        Materia materia = materiaRepo.findByNombre(nombreMateria)
+                .orElseGet(() -> {
+                    Materia nueva = new Materia();
+                    nueva.setNombre(nombreMateria);
+                    nueva.setCreditos(1);
+                    return materiaRepo.save(nueva);
+                });
+
+        nota.setMateria(materia);
         notaRepo.save(nota);
         return "redirect:/notas/" + nota.getEstudiante().getId();
     }

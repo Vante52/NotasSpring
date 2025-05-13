@@ -14,7 +14,7 @@ public class ServicioNota {
     private RepositorioNota repositorioNota;
 
     public List<co.edu.Javeriana.modelo.Nota> obtenerNotasPorEstudianteYMateria(Long estudianteId, String materia) {
-        return repositorioNota.findByEstudianteIdAndMateria(estudianteId, materia);
+        return repositorioNota.findByEstudianteIdAndMateriaNombre(estudianteId, materia);
     }
     public double calcularPromedioPorMateria(Long estudianteId, String materia) {
         List<co.edu.Javeriana.modelo.Nota> notas = obtenerNotasPorEstudianteYMateria(estudianteId, materia);
