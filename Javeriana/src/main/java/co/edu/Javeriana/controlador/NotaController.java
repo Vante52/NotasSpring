@@ -94,4 +94,35 @@ public class NotaController {
         return "nota-promedio";
     }
 
+    public RepositorioNota getNotaRepo() {
+        return notaRepo;
+    }
+
+    public void setNotaRepo(RepositorioNota notaRepo) {
+        this.notaRepo = notaRepo;
+    }
+
+    public RepositorioEstudiante getEstudianteRepo() {
+        return estudianteRepo;
+    }
+
+    public void setEstudianteRepo(RepositorioEstudiante estudianteRepo) {
+        this.estudianteRepo = estudianteRepo;
+    }
+
+    public RepositorioMateria getMateriaRepo() {
+        return materiaRepo;
+    }
+
+    public void setMateriaRepo(RepositorioMateria materiaRepo) {
+        this.materiaRepo = materiaRepo;
+    }
+
+    public ServicioNota getServicioNota() {
+        return servicioNota;
+    }
+
+    public void setServicioNota(ServicioNota servicioNota) {
+        this.servicioNota = servicioNota;
+    }
 }

@@ -34,4 +34,49 @@ public class Nota {
 
     @Column
     private Double porcentaje;
+
+    public Long getId() {
+        return id;
+    }
+
+
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
+    }
+
+    public Materia getMateria() {
+        return materia;
+    }
+
+    public void setMateria(Materia materia) {
+        this.materia = materia;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
+
+    public Double getPorcentaje() {
+        return porcentaje;
+    }
+
+    public void setPorcentaje(Double porcentaje) {
+        this.porcentaje = porcentaje;
+    }
 }
