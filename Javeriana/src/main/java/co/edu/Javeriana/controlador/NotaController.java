@@ -77,22 +77,34 @@ public class NotaController {
 
     @GetMapping("/{estudianteId}/promedio")
     public String mostrarFormularioPromedio(@PathVariable Long estudianteId, Model model) {
-        model.addAttribute("estudianteId", estudianteId);
-        model.addAttribute("materia", "");
+        Estudiante estudiante = estudianteRepo.findById(estudianteId)
+                .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + estudianteId));
+
+        model.addAttribute("estudiante", estudiante);
+        model.addAttribute("materias", materiaRepo.findAll());
         model.addAttribute("promedio", null);
         return "nota-promedio";
     }
 
     @PostMapping("/promedio")
     public String calcularPromedio(@RequestParam Long estudianteId,
-                                   @RequestParam String materia,
+                                   @RequestParam Long materiaId,
                                    Model model) {
-        double promedio = servicioNota.calcularPromedioPorMateria(estudianteId, materia);
+        Materia materia = materiaRepo.findById(materiaId)
+                .orElseThrow(() -> new IllegalArgumentException("Materia no encontrada"));
+
+        Estudiante estudiante = estudianteRepo.findById(estudianteId)
+                .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado"));
+
+        double promedio = servicioNota.calcularPromedioPorMateria(estudianteId, materia.getNombre());
+
         model.addAttribute("promedio", promedio);
-        model.addAttribute("estudianteId", estudianteId);
-        model.addAttribute("materia", materia);
+        model.addAttribute("estudiante", estudiante);
+        model.addAttribute("materiaSeleccionada", materia);
+        model.addAttribute("materias", materiaRepo.findAll());
         return "nota-promedio";
     }
+
 
     public RepositorioNota getNotaRepo() {
         return notaRepo;

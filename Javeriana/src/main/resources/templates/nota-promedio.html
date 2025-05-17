@@ -7,9 +7,8 @@
 <body>
 <h1>Promedio por Materia de <span th:text="${estudiante.nombre + ' ' + estudiante.apellido}"></span></h1>
 
-<form th:action="@{'/notas/' + ${estudiante.id} + '/promedio'}" method="post">
+<form th:action="@{/notas/promedio}" method="post">
     <input type="hidden" name="estudianteId" th:value="${estudiante.id}"/>
-
     <div>
         <label>Materia:</label>
         <select name="materiaId" required>
