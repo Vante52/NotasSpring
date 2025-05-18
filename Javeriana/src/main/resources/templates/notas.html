@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Notas</title>
+    <title>Notas por Materia</title>
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
-<h1>Notas de <span th:text="${estudiante.nombre} + ' ' + ${estudiante.apellido}"></span></h1>
+<h1>Notas de <span th:text="${estudiante.nombre + ' ' + estudiante.apellido}"></span> en <span th:text="${materia.nombre}"></span></h1>
 
-<a th:href="@{'/notas/' + ${estudiante.id} + '/nueva'}">Agregar Nota</a> |
-<a th:href="@{'/notas/' + ${estudiante.id} + '/promedio'}">Ver Promedio por Materia</a> |
-<a th:href="@{/estudiantes}">Volver</a>
+<a th:href="@{'/notas/' + ${estudiante.id} + '/materia/' + ${materia.id} + '/nueva'}">Agregar Nota</a> |
+<a th:href="@{'/notas/' + ${estudiante.id} + '/materias'}">Volver a Materias</a>
 
 <table border="1">
     <tr>
-        <th>Materia</th>
         <th>Valor</th>
         <th>Porcentaje</th>
         <th>Observación</th>
         <th>Acciones</th>
     </tr>
     <tr th:each="nota : ${notas}">
-        <td th:text="${nota.materia?.nombre}"></td>
         <td th:text="${nota.valor}"></td>
-        <td th:text="${nota.porcentaje}"></td>
+        <td th:text="${nota.porcentaje} + '%'"></td>
         <td th:text="${nota.observacion}"></td>
         <td>
             <a th:href="@{'/notas/editar/' + ${nota.id}}">Editar</a> |
@@ -30,5 +27,11 @@
         </td>
     </tr>
 </table>
+
+<!-- Promedio ponderado -->
+<div style="margin-top: 20px; font-size: 20px; font-weight: bold;" th:if="${promedio != null}">
+    Promedio ponderado: <span th:text="${#numbers.formatDecimal(promedio, 1, 2)}"></span>
+</div>
+
 </body>
 </html>

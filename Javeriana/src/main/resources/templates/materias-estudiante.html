@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Materias del Estudiante</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<h1>Materias de <span th:text="${estudiante.nombre} + ' ' + ${estudiante.apellido}"></span></h1>
+
+<a th:href="@{/estudiantes}">Volver</a>
+
+<table border="1">
+    <tr>
+        <th>Materia</th>
+        <th>Acciones</th>
+    </tr>
+    <tr th:each="materia : ${materias}">
+        <td th:text="${materia.nombre}"></td>
+        <td>
+            <a th:href="@{'/notas/' + ${estudiante.id} + '/materia/' + ${materia.id}}">Ver Notas</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/notas")
 public class NotaController {
@@ -35,7 +37,7 @@ public class NotaController {
 
         model.addAttribute("notas", notaRepo.findByEstudianteId(estudianteId));
         model.addAttribute("estudiante", estudiante);
-        return "notas";
+        return "redirect:/notas/" + estudianteId + "/materias";
     }
 
     @GetMapping("/{estudianteId}/nueva")

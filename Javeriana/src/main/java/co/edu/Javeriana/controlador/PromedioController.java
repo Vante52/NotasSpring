@@ -6,6 +6,7 @@ import co.edu.Javeriana.modelo.Nota;
 import co.edu.Javeriana.repositorio.RepositorioEstudiante;
 import co.edu.Javeriana.repositorio.RepositorioMateria;
 import co.edu.Javeriana.repositorio.RepositorioNota;
+import co.edu.Javeriana.servicio.ServicioNota;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("notas//promedios")
+@RequestMapping("/notas")
 public class PromedioController {
 
     @Autowired
@@ -26,39 +27,58 @@ public class PromedioController {
     @Autowired
     private RepositorioMateria materiaRepo;
 
-    // Mostrar el formulario con el combo de materias
-    @GetMapping("/{estudianteId}")
-    public String mostrarFormulario(@PathVariable Long estudianteId, Model model) {
-        Estudiante estudiante = estudianteRepo.findById(estudianteId).orElseThrow();
-        List<Materia> materias = materiaRepo.findAll();
+    @Autowired
+    private ServicioNota servicioNota;
+
+    @GetMapping("/{estudianteId}/materias")
+    public String listarMateriasPorEstudiante(@PathVariable Long estudianteId, Model model) {
+        Estudiante estudiante = estudianteRepo.findById(estudianteId)
+                .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + estudianteId));
+
+        List<Materia> materias = materiaRepo.findDistinctByNotas_Estudiante_Id(estudianteId);
 
         model.addAttribute("estudiante", estudiante);
         model.addAttribute("materias", materias);
-        return "nota-promedio"; // corresponde al archivo HTML que me diste
+        return "materias-estudiante";
     }
 
-    // Calcular el promedio ponderado
-    @PostMapping("/{estudianteId}/promedio")
-    public String calcularPromedio(@PathVariable Long estudianteId,
-                                   @RequestParam Long materiaId,
-                                   Model model) {
+    @GetMapping("/{estudianteId}/materia/{materiaId}")
+    public String listarNotasPorMateria(@PathVariable Long estudianteId,
+                                        @PathVariable Long materiaId,
+                                        Model model) {
+        Estudiante estudiante = estudianteRepo.findById(estudianteId)
+                .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado con ID: " + estudianteId));
 
-        Estudiante estudiante = estudianteRepo.findById(estudianteId).orElseThrow();
-        Materia materia = materiaRepo.findById(materiaId).orElseThrow();
-        List<Materia> materias = materiaRepo.findAll();
+        Materia materia = materiaRepo.findById(materiaId)
+                .orElseThrow(() -> new IllegalArgumentException("Materia no encontrada con ID: " + materiaId));
 
         List<Nota> notas = notaRepo.findByEstudianteIdAndMateriaId(estudianteId, materiaId);
 
-        double promedio = 0.0;
-        for (Nota nota : notas) {
-            promedio += (nota.getValor() * nota.getPorcentaje() / 100.0);
-        }
+        double promedio = servicioNota.calcularPromedioPorMateria(estudianteId, materia.getNombre());
 
         model.addAttribute("estudiante", estudiante);
-        model.addAttribute("materias", materias);
-        model.addAttribute("materiaSeleccionada", materia);
+        model.addAttribute("materia", materia);
+        model.addAttribute("notas", notas);
         model.addAttribute("promedio", promedio);
+        return "notas";
+    }
 
-        return "nota-promedio";
+    @GetMapping("/{estudianteId}/materia/{materiaId}/nueva")
+    public String nuevaNotaPorMateria(@PathVariable Long estudianteId,
+                                      @PathVariable Long materiaId,
+                                      Model model) {
+        Estudiante estudiante = estudianteRepo.findById(estudianteId)
+                .orElseThrow(() -> new IllegalArgumentException("Estudiante no encontrado"));
+
+        Materia materia = materiaRepo.findById(materiaId)
+                .orElseThrow(() -> new IllegalArgumentException("Materia no encontrada"));
+
+        Nota nota = new Nota();
+        nota.setEstudiante(estudiante);
+        nota.setMateria(materia);
+
+        model.addAttribute("nota", nota);
+        model.addAttribute("materiaFija", true); // puedes usar esto en el formulario para bloquear el campo materia
+        return "editar-nota";
     }
 }
