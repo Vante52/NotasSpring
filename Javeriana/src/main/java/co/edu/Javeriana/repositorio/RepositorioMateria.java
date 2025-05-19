@@ -1,12 +1,12 @@
 package co.edu.Javeriana.repositorio;
 
 import co.edu.Javeriana.modelo.Materia;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import java.util.Optional;
 
-public interface RepositorioMateria extends JpaRepository<Materia, Long> {
-    Optional<Materia> findByNombre(String nombre);
-    List<Materia> findDistinctByNotas_Estudiante_Id(Long estudianteId);
+@Repository
+public interface RepositorioMateria extends ReactiveCrudRepository<Materia, Long> {
+    Flux<Materia> findByNombre(String nombre);
 }

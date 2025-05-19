@@ -3,44 +3,34 @@ package co.edu.Javeriana.controlador;
 import co.edu.Javeriana.modelo.Estudiante;
 import co.edu.Javeriana.repositorio.RepositorioEstudiante;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-@Controller
-@RequestMapping("/estudiantes")
+@RestController
+@RequestMapping("/api/estudiantes")
 public class EstudianteController {
 
     @Autowired
-    private RepositorioEstudiante estudianteRepo;
+    private RepositorioEstudiante repo;
 
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("estudiantes", estudianteRepo.findAll());
-        return "estudiantes";
+    public Flux<Estudiante> listar() {
+        return repo.findAll();
     }
 
-    @GetMapping("/nuevo")
-    public String nuevo(Model model) {
-        model.addAttribute("estudiante", new Estudiante());
-        return "editar-estudiante";
+    @GetMapping("/{id}")
+    public Mono<Estudiante> obtener(@PathVariable Long id) {
+        return repo.findById(id);
     }
 
-    @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Estudiante estudiante) {
-        estudianteRepo.save(estudiante);
-        return "redirect:/estudiantes";
+    @PostMapping
+    public Mono<Estudiante> guardar(@RequestBody Estudiante estudiante) {
+        return repo.save(estudiante);
     }
 
-    @GetMapping("/editar/{id}")
-    public String editar(@PathVariable Long id, Model model) {
-        model.addAttribute("estudiante", estudianteRepo.findById(id).orElseThrow());
-        return "editar-estudiante";
-    }
-
-    @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable Long id) {
-        estudianteRepo.deleteById(id);
-        return "redirect:/estudiantes";
+    @DeleteMapping("/{id}")
+    public Mono<Void> eliminar(@PathVariable Long id) {
+        return repo.deleteById(id);
     }
 }

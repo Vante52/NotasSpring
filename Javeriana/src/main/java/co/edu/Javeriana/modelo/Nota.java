@@ -1,59 +1,42 @@
-// src/main/java/co/edu/javeriana/modelo/Nota.java
 package co.edu.Javeriana.modelo;
 
-import co.edu.Javeriana.modelo.Materia;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Getter
-@Setter
-@Entity
-@Table(name = "nota")
+@Data
+@Table("nota")
 public class Nota {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Relación con Estudiante
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estudiante_id", nullable = false)
-    private co.edu.Javeriana.modelo.Estudiante estudiante;
-
-    // Relación con Materia
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "materia_id", nullable = false)
-    private Materia materia;
-
-    @Column(length = 500)
+    private Long estudianteId;
+    private Long materiaId;
     private String observacion;
-
-    @Column
     private Double valor;
-
-    @Column
     private Double porcentaje;
 
     public Long getId() {
         return id;
     }
 
-
-    public Estudiante getEstudiante() {
-        return estudiante;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setEstudiante(Estudiante estudiante) {
-        this.estudiante = estudiante;
+    public Long getEstudianteId() {
+        return estudianteId;
     }
 
-    public Materia getMateria() {
-        return materia;
+    public void setEstudianteId(Long estudianteId) {
+        this.estudianteId = estudianteId;
     }
 
-    public void setMateria(Materia materia) {
-        this.materia = materia;
+    public Long getMateriaId() {
+        return materiaId;
+    }
+
+    public void setMateriaId(Long materiaId) {
+        this.materiaId = materiaId;
     }
 
     public String getObservacion() {

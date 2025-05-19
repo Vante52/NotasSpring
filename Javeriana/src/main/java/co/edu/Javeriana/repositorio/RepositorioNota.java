@@ -1,13 +1,12 @@
 package co.edu.Javeriana.repositorio;
 
 import co.edu.Javeriana.modelo.Nota;
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
-public interface RepositorioNota extends JpaRepository<Nota, Long> {
-    List<Nota> findByEstudianteId(Long estudianteId);
-
-    List<Nota> findByEstudianteIdAndMateriaNombre(Long estudianteId, String materiaNombre);
-
-    List<Nota> findByEstudianteIdAndMateriaId(Long estudianteId, Long materiaId);
+@Repository
+public interface RepositorioNota extends ReactiveCrudRepository<Nota, Long> {
+    Flux<Nota> findByEstudianteId(Long estudianteId);
+    Flux<Nota> findByEstudianteIdAndMateriaId(Long estudianteId, Long materiaId);
 }
