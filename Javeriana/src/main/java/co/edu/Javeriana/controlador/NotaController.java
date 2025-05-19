@@ -107,7 +107,6 @@ public class NotaController {
         return "nota-promedio";
     }
 
-
     public RepositorioNota getNotaRepo() {
         return notaRepo;
     }

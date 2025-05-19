@@ -8,7 +8,7 @@
 <h1>Materias de <span th:text="${estudiante.nombre} + ' ' + ${estudiante.apellido}"></span></h1>
 
 <a th:href="@{/estudiantes}">Volver</a>
-
+<a th:href="@{/materias/nueva(estudianteId=${estudiante.id})}">Crear Materia</a>
 <table border="1">
     <tr>
         <th>Materia</th>
